@@ -19,8 +19,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.tictactoe.databinding.FragmentTicTacToeBinding;
+
 
 public class TicTacToeFragment extends Fragment implements View.OnClickListener {
+    private FragmentTicTacToeBinding binding;
     //counters
     static int playerOneWinCount = 0;
     static int playerTwoWinCount = 0;
@@ -51,43 +54,49 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_tic_tac_toe, container, false);
-
-        getParentFragmentManager().setFragmentResultListener("dataFromChooseFragment", this, new FragmentResultListener() {
-                    @Override
-                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                      playerOneName = result.getString("firstPlayerName");
-                      playerTwoName = result.getString("secondPlayerName");
-                      TextView playerOneTextView = view.findViewById(R.id.txt_player_one_name);
-                      TextView playerTwoTextView = view.findViewById(R.id.txt_player_two_name);
-                        if(playerOneName.isEmpty()){
-                            playerOneTextView.setText("Player X");
-                            playerTurn.setText("Player X turn");
-                        }else {
-                            playerOneTextView.setText(playerOneName.trim()+"(X)");
-                            playerTurn.setText(playerOneName.trim()+"'s turn");
-                        }
-                        if(playerTwoName.isEmpty()){
-                            playerTwoTextView.setText("Player O");
-                        }else {
-                            playerTwoTextView.setText(playerTwoName.trim()+"(0)");
-                        }
-                    }
-                }
-        );
+//        View view = inflater.inflate(R.layout.fragment_tic_tac_toe, container, false);
+        binding = FragmentTicTacToeBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
         return view;
-
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getParentFragmentManager().setFragmentResultListener("dataFromChooseFragment", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                playerOneName = result.getString("firstPlayerName");
+                playerTwoName = result.getString("secondPlayerName");
+//              TextView playerOneTextView = view.findViewById(R.id.txt_player_one_name);
+//              TextView playerTwoTextView = view.findViewById(R.id.txt_player_two_name);
+                TextView playerOneTextView = binding.txtPlayerOneName;
+                TextView playerTwoTextView = binding.txtPlayerTwoName;
 
-        playerOneScore = (TextView) view.findViewById(R.id.txt_player_one_score);
-        playerTwoScore = (TextView) view.findViewById(R.id.txt_player_two_score);
-        playerTurn= (TextView) view.findViewById(R.id.txt_player_turn);
-        draw = (TextView) view.findViewById(R.id.txt_player_one_draws);
-        draw2 = (TextView) view.findViewById(R.id.txt_player_two_draws);
+                if(playerOneName.isEmpty()){
+                    playerOneTextView.setText("Player X");
+                    playerTurn.setText("Player X turn");
+                }else {
+                    playerOneTextView.setText(playerOneName.trim()+"(X)");
+                    playerTurn.setText(playerOneName.trim()+"'s turn");
+                }
+                if(playerTwoName.isEmpty()){
+                    playerTwoTextView.setText("Player O");
+                }else {
+                    playerTwoTextView.setText(playerTwoName.trim()+"(0)");
+                }
+            }
+        });
+//        playerOneScore = (TextView) view.findViewById(R.id.txt_player_one_score);
+//        playerTwoScore = (TextView) view.findViewById(R.id.txt_player_two_score);
+//        playerTurn= (TextView) view.findViewById(R.id.txt_player_turn);
+//        draw = (TextView) view.findViewById(R.id.txt_player_one_draws);
+//        draw2 = (TextView) view.findViewById(R.id.txt_player_two_draws);
+        playerOneScore = binding.txtPlayerOneScore;
+        playerTwoScore = binding.txtPlayerTwoScore;
+        playerTurn = binding.txtPlayerTurn;
+        draw = binding.txtPlayerOneDraws;
+        draw2 = binding.txtPlayerTwoDraws;
 
         if(playerOneName!=null){
             playerTurn.setText(playerOneName+"'s turn");
@@ -172,18 +181,18 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
 
     public String getButtonText(int mCount) {
         if (mCount % 2 == 0) {
-            if(playerOneName.isEmpty()){
-                playerTurn.setText("Player X turn");
-            }else{
+//            if(playerOneName.isEmpty()){
+//                playerTurn.setText("Player X turn");
+//            }else{
                 playerTurn.setText(playerOneName+"'s turn");
-            }
+//            }
             return "O";
         } else {
-            if(playerOneName.isEmpty()){
-                playerTurn.setText("Player O turn");
-            }else{
+//            if(playerOneName.isEmpty()){
+//                playerTurn.setText("Player O turn");
+//            }else{
                 playerTurn.setText(playerTwoName+"'s turn");
-            }
+//            }
             return "X";
         }
     }
@@ -235,11 +244,11 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
                     public void onClick(DialogInterface dialog, int i) {
                         dialog.dismiss();
                         disableEnableButtons(true);
-                        if(playerOneName.isEmpty() || playerOneName==null){
-                           playerTurn.setText("Player X turn");
-                        }else{
+//                        if(playerOneName.isEmpty() || playerOneName==null){
+//                           playerTurn.setText("Player X turn");
+//                        }else{
                             playerTurn.setText(playerOneName+"'s turn");
-                        }
+//                        }
                     }
                 }).setNegativeButton("No",
                 new DialogInterface.OnClickListener() {
