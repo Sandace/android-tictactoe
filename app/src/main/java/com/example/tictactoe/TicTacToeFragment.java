@@ -71,18 +71,10 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
                 TextView playerOneTextView = binding.txtPlayerOneName;
                 TextView playerTwoTextView = binding.txtPlayerTwoName;
 
-                if(playerOneName.isEmpty()){
-                    playerOneTextView.setText("Player X");
-                    playerTurn.setText("Player X turn");
-                }else {
-                    playerOneTextView.setText(playerOneName.trim()+"(X)");
-                    playerTurn.setText(playerOneName.trim()+"'s turn");
-                }
-                if(playerTwoName.isEmpty()){
-                    playerTwoTextView.setText("Player O");
-                }else {
-                    playerTwoTextView.setText(playerTwoName.trim()+"(0)");
-                }
+                playerTurn.setText(playerOneName.trim()+"'s turn");
+                playerOneTextView.setText(playerOneName.trim()+"(X)");
+                playerTwoTextView.setText(playerTwoName.trim()+"(0)");
+
             }
         });
         playerOneScore = binding.txtPlayerOneScore;
@@ -145,6 +137,7 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
             default:
                 break;
         }
+        //player one wins
         if (checkWinner(buttons) == 1) {
             count = 0;
             disableEnableButtons(false);
@@ -153,6 +146,7 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
             playerOneScore.setText(String.valueOf(playerOneWinCount));
             playerTurn.setText(playerTwoName+"'s turn");
         }
+        //player two wins
         else if(checkWinner(buttons) == 2){
             count = 0;
             disableEnableButtons(false);
@@ -161,6 +155,7 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
             playerTwoScore.setText(String.valueOf(playerTwoWinCount));
             playerTurn.setText(playerOneName+"'s turn");
         }
+        //draw
         else if(count==9){
             count = 0;
             disableEnableButtons(false);
@@ -174,10 +169,10 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
 
     public String getButtonText(int mCount) {
         if (mCount % 2 == 0) {
-            playerTurn.setText(playerOneName+"'s turn");
+            playerTurn.setText(playerOneName+" 's turn");
             return "O";
         } else {
-            playerTurn.setText(playerTwoName+"'s turn");
+            playerTurn.setText(playerTwoName+" 's turn");
             return "X";
         }
     }
@@ -230,7 +225,6 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
                         dialog.dismiss();
                         disableEnableButtons(true);
                             playerTurn.setText(playerOneName+"'s turn");
-//                        }
                     }
                 }).setNegativeButton("No",
                 new DialogInterface.OnClickListener() {
