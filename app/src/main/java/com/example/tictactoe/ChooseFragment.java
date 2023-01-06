@@ -1,23 +1,21 @@
 package com.example.tictactoe;
 
-import android.graphics.Color;
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.tictactoe.databinding.FragmentChooseBinding;
 
@@ -30,16 +28,9 @@ public class ChooseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-//        View view = inflater.inflate(R.layout.fragment_choose, container, false);
-//        btnPlayNow = (Button) view.findViewById(R.id.btn_play_now);
-//        playerOneName = (EditText) view.findViewById(R.id.txt_player_one_value);
-//        playerTwoName = (EditText) view.findViewById(R.id.txt_player_two_value);
 
         binding = FragmentChooseBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
-
-
         return view;
     }
 
@@ -55,18 +46,29 @@ public class ChooseFragment extends Fragment {
                 result.putString("firstPlayerName",playerOneName.getText().toString());
                 result.putString("secondPlayerName",playerTwoName.getText().toString());
                 getParentFragmentManager().setFragmentResult("dataFromChooseFragment",result);
+
                 if(playerOneName.getText().toString().trim().isEmpty()||playerTwoName.getText().toString().trim().isEmpty()){
-                    Toast toast = Toast.makeText(getContext(),
+                    Toast.makeText(getContext(),
                             "Name can not be empty",
-                            Toast.LENGTH_SHORT);
-                    View toastView = toast.getView();
-                    toastView.setBackgroundColor(Color.RED);
-                    toast.show();
+                            Toast.LENGTH_SHORT).show();
                 }else {
-                    Navigation.findNavController(view).navigate(R.id.action_chooseFragment2_to_ticTacToe);
+
+                    Fragment fragment = new TicTacToeFragment();
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.fragmentContainerView, fragment);
+                    fragmentTransaction.commit();
                 }
             }
         });
-//
+        binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InputMethodManager im = (InputMethodManager)
+                        getActivity().getSystemService(INPUT_METHOD_SERVICE);
+                im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                        0);
+            }
+        });
     }
 }

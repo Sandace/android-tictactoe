@@ -9,7 +9,9 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 
 import android.text.method.KeyListener;
@@ -53,8 +55,6 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-//        View view = inflater.inflate(R.layout.fragment_tic_tac_toe, container, false);
         binding = FragmentTicTacToeBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         return view;
@@ -68,8 +68,6 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 playerOneName = result.getString("firstPlayerName");
                 playerTwoName = result.getString("secondPlayerName");
-//              TextView playerOneTextView = view.findViewById(R.id.txt_player_one_name);
-//              TextView playerTwoTextView = view.findViewById(R.id.txt_player_two_name);
                 TextView playerOneTextView = binding.txtPlayerOneName;
                 TextView playerTwoTextView = binding.txtPlayerTwoName;
 
@@ -87,11 +85,6 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
                 }
             }
         });
-//        playerOneScore = (TextView) view.findViewById(R.id.txt_player_one_score);
-//        playerTwoScore = (TextView) view.findViewById(R.id.txt_player_two_score);
-//        playerTurn= (TextView) view.findViewById(R.id.txt_player_turn);
-//        draw = (TextView) view.findViewById(R.id.txt_player_one_draws);
-//        draw2 = (TextView) view.findViewById(R.id.txt_player_two_draws);
         playerOneScore = binding.txtPlayerOneScore;
         playerTwoScore = binding.txtPlayerTwoScore;
         playerTurn = binding.txtPlayerTurn;
@@ -181,18 +174,10 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
 
     public String getButtonText(int mCount) {
         if (mCount % 2 == 0) {
-//            if(playerOneName.isEmpty()){
-//                playerTurn.setText("Player X turn");
-//            }else{
-                playerTurn.setText(playerOneName+"'s turn");
-//            }
+            playerTurn.setText(playerOneName+"'s turn");
             return "O";
         } else {
-//            if(playerOneName.isEmpty()){
-//                playerTurn.setText("Player O turn");
-//            }else{
-                playerTurn.setText(playerTwoName+"'s turn");
-//            }
+            playerTurn.setText(playerTwoName+"'s turn");
             return "X";
         }
     }
@@ -244,9 +229,6 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
                     public void onClick(DialogInterface dialog, int i) {
                         dialog.dismiss();
                         disableEnableButtons(true);
-//                        if(playerOneName.isEmpty() || playerOneName==null){
-//                           playerTurn.setText("Player X turn");
-//                        }else{
                             playerTurn.setText(playerOneName+"'s turn");
 //                        }
                     }
@@ -258,7 +240,11 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
                         drawCount=0;
                         playerOneWinCount=0;
                         playerTwoWinCount=0;
-                        Navigation.findNavController(requireView()).navigate(R.id.chooseFragment2);
+                        Fragment fragment = new ChooseFragment();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.fragmentContainerView,fragment);
+                        fragmentTransaction.commit();
                     }
                 });
         AlertDialog alert = builder.create();
@@ -298,7 +284,11 @@ public class TicTacToeFragment extends Fragment implements View.OnClickListener 
                 playerOneWinCount=0;
                 playerTwoWinCount=0;
                 count=0;
-                Navigation.findNavController(requireView()).navigate(R.id.chooseFragment2);
+                Fragment fragment = new ChooseFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragmentContainerView, fragment);
+                fragmentTransaction.commit();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(
